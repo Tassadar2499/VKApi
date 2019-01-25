@@ -76,6 +76,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CityWeather.cs" />
+    <Compile Include="DictEngRus.cs" />
+    <Compile Include="KeysRepos.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WeatherAP.cs" />

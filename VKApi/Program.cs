@@ -12,20 +12,19 @@ namespace VKApi
 {
     class Program
     {
-        public static string MyAppToken = "8fa09ca98db869b78d4c7817a84db7ec1a390ebc8464fc1f6be9fbaca0fa4839860d22a2736974a3574ff";
-        public static ulong MyGroupId = 177228422;
-
         static void Main(string[] args)
         {
+            DictEngRus.FillTheDictionary();
             Console.WriteLine("Старт сеанса ");
             Console.WriteLine();
             var api = new VkApi();
-            api.Authorize(new ApiAuthParams() { AccessToken = MyAppToken });
-
+            api.Authorize(new ApiAuthParams() { AccessToken = KeysRepos.MyAppToken });
+            Console.WriteLine("Авторизовался");
+            Console.WriteLine();
 
             while (true)
             {
-                var s = api.Groups.GetLongPollServer(MyGroupId);
+                var s = api.Groups.GetLongPollServer(KeysRepos.MyGroupId);
                 var poll = api.Groups.GetBotsLongPollHistory(
                                       new BotsLongPollHistoryParams()
                                       { Server = s.Server, Ts = s.Ts, Key = s.Key, Wait = 1 });
@@ -37,6 +36,7 @@ namespace VKApi
                     {
                         var currentString = a.Message.Body;
                         Console.WriteLine(currentString);
+                        Console.WriteLine();
                         var strOut = WeatherAP.GetWeather(currentString);
                         var idUser = a.Message.UserId;
                         var randomNum = new Random();
