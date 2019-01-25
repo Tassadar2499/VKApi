@@ -17,9 +17,11 @@ namespace VKApi
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello");
+            Console.WriteLine("Старт сеанса ");
+            Console.WriteLine();
             var api = new VkApi();
             api.Authorize(new ApiAuthParams() { AccessToken = MyAppToken });
+
 
             while (true)
             {
@@ -36,12 +38,20 @@ namespace VKApi
                         var currentString = a.Message.Body;
                         Console.WriteLine(currentString);
                         var strOut = WeatherAP.GetWeather(currentString);
-                        Random random = new Random();
+                        var idUser = a.Message.UserId;
+                        var randomNum = new Random();
                         api.Messages.Send(new MessagesSendParams()
                         {
-                            RandomId = random.Next(0, int.MaxValue),
-                            UserId = a.Message.UserId,
+                            RandomId = randomNum.Next(0, int.MaxValue),
+                            UserId = idUser,
                             Message = strOut
+                        });
+
+                        api.Messages.Send(new MessagesSendParams()
+                        {
+                            RandomId = randomNum.Next(1, int.MaxValue) - 1,
+                            UserId = idUser,
+                            Message = "Введите название города"
                         });
                     }
                 }

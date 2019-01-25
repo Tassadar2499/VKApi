@@ -15,6 +15,7 @@ namespace VKApi
         {
             var result = "";
             var key = "&appid=03133e2dfe331abba3e6b5912b3fa4a8";
+            if (city == "старт") return "Погнали";
             string weburl = "http://api.openweathermap.org/data/2.5/weather?q=" + city + key;
             try
             {
@@ -27,6 +28,7 @@ namespace VKApi
             }
             catch
             {
+
                 result = "Неверный формат строки";
                 Console.WriteLine(result);
             }
