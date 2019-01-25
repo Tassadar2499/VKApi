@@ -28,7 +28,6 @@ namespace VKApi
             }
             catch
             {
-
                 result = "Неверный формат строки";
                 Console.WriteLine(result);
             }
@@ -40,14 +39,11 @@ namespace VKApi
         {
             Func<string[], string, string> findStrByQuery = 
                 (string[] strArray, string query) =>
-            {
-                return strArray.Where(l => l.Contains(query)).ToArray()[0];
-            };
+                    strArray.Where(l => l.Contains(query)).ToArray()[0];
          
             var cityWeather = new CityWeather(cityName);
             var strArr = response.Split(',');            
-            strArr = strArr.Select(l => l.Replace('"', ' '))
-                           .ToArray();
+            strArr = strArr.Select(l => l.Replace('"', ' ')).ToArray();
             var strTemperature = findStrByQuery(strArr, "temp");
             var strCloud = findStrByQuery(strArr, "description");
             var strWind = findStrByQuery(strArr, "wind");
