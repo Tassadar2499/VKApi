@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using Newtonsoft.Json;
 
 namespace VKApi
 {
@@ -18,14 +19,15 @@ namespace VKApi
             string weburl = "http://api.openweathermap.org/data/2.5/weather?q=" + city + KeysRepos.OpenWeatherKey;
             try
             {
+                var response = "";
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(weburl);
                 HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                string response;
                 using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
                     response = streamReader.ReadToEnd();
                 Console.WriteLine("Подключился к серверу погоды");
                 Console.WriteLine();
-                result = ConvertCityWeather(response, city);
+                var jDictionary = deserializeToDict(response);
+                result = convertCityWeather(city, jDictionary);
             }
             catch
             {
@@ -38,31 +40,31 @@ namespace VKApi
             return result;
         }
 
-        private static string ConvertCityWeather(string response, string cityName)
+        private static string convertCityWeather(string cityName, Dictionary<object, object> jDictionary)
         {
-            Func<string[], string, string> findStrByQuery = 
-                (string[] strArray, string query) =>
-                    strArray.Where(l => l.Contains(query)).ToArray()[0];
-         
-            var cityWeather = new CityWeather(cityName);           
-            var strArr = response.Split(',')
-                                 .Select(l => l.Replace('"', ' '))
-                                 .ToArray();
-            var strTemperature = findStrByQuery(strArr, "temp");
-            var strCloud = findStrByQuery(strArr, "description");
-            var strWind = findStrByQuery(strArr, "wind");
-            strTemperature = strTemperature.Substring(strTemperature.LastIndexOf(':') + 1);
-            strCloud = strCloud.Substring(strCloud.LastIndexOf(':') + 2, strCloud.Length - (strCloud.LastIndexOf(':') + 3));
-            strWind = strWind.Substring(strWind.LastIndexOf(':') + 1);
-            strWind = strWind.Trim('{', '}')
-                             .Replace('.', ',');
-            strTemperature = strTemperature.Replace('.', ',');
-            var temperature = double.Parse(strTemperature) - 273.15;
-            cityWeather.Cloud = strCloud;
-            cityWeather.Wind = double.Parse(strWind);
-            cityWeather.Temperature = Math.Round(temperature);
+
+            var cityWeather = new CityWeather(cityName);
+
+            var jMain = jDictionary["main"].ToString();
+            var jWind = jDictionary["wind"].ToString();
+            var jWeather = jDictionary["weather"].ToString();
+            jWeather = jWeather.Trim('[', ']');
+
+            var windDict = deserializeToDict(jWind);
+            var mainDict = deserializeToDict(jMain);
+            var weatherDict = deserializeToDict(jWeather);
+
+            cityWeather.Cloud = weatherDict["description"].ToString();
+            cityWeather.Wind = double.Parse(windDict["speed"].ToString());
+            cityWeather.Humidity = int.Parse(mainDict["humidity"].ToString());
+            cityWeather.Temperature = Math.Round(double.Parse(mainDict["temp"].ToString()) - 273.15);
 
             return cityWeather.ToString();
+        }
+
+        private static Dictionary<object, object> deserializeToDict(string jStr)
+        {
+            return JsonConvert.DeserializeObject<Dictionary<object, object>>(jStr);
         }
     }
 }
