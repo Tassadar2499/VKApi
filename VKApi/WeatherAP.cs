@@ -16,7 +16,7 @@ namespace VKApi
         {
             var result = "";
             if (city == "старт") return "Погнали";
-            string weburl = "http://api.openweathermap.org/data/2.5/weather?q=" + city + KeysRepos.OpenWeatherKey;
+			string weburl = KeysRepos.OpenWeatherURL + city + KeysRepos.OpenWeatherKey;
             try
             {
                 var response = "";
@@ -24,23 +24,21 @@ namespace VKApi
                 HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                 using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
                     response = streamReader.ReadToEnd();
-                Console.WriteLine("Подключился к серверу погоды");
-                Console.WriteLine();
-                var jDictionary = deserializeToDict(response);
-                result = convertCityWeather(city, jDictionary);
+                Console.WriteLine("Подключился к серверу погоды\r\n");
+                var jDictionary = DeserializeToDict(response);
+                result = ConvertCityWeather(city, jDictionary);
             }
             catch
             {
                 result = "Неверный формат строки";
             }
 
-            Console.WriteLine(result);
-            Console.WriteLine();
+            Console.WriteLine(result + "\r\n");
 
             return result;
         }
 
-        private static string convertCityWeather(string cityName, Dictionary<object, object> jDictionary)
+        private static string ConvertCityWeather(string cityName, Dictionary<object, object> jDictionary)
         {
 
             var cityWeather = new CityWeather(cityName);
@@ -50,9 +48,9 @@ namespace VKApi
             var jWeather = jDictionary["weather"].ToString();
             jWeather = jWeather.Trim('[', ']');
 
-            var windDict = deserializeToDict(jWind);
-            var mainDict = deserializeToDict(jMain);
-            var weatherDict = deserializeToDict(jWeather);
+            var windDict = DeserializeToDict(jWind);
+            var mainDict = DeserializeToDict(jMain);
+            var weatherDict = DeserializeToDict(jWeather);
 
             cityWeather.Cloud = weatherDict["description"].ToString();
             cityWeather.Wind = double.Parse(windDict["speed"].ToString());
@@ -62,7 +60,7 @@ namespace VKApi
             return cityWeather.ToString();
         }
 
-        private static Dictionary<object, object> deserializeToDict(string jStr)
+        private static Dictionary<object, object> DeserializeToDict(string jStr)
         {
             return JsonConvert.DeserializeObject<Dictionary<object, object>>(jStr);
         }

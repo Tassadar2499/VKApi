@@ -14,13 +14,10 @@ namespace VKApi
     {
         static void Main(string[] args)
         {
-            DictEngRus.FillTheDictionary();
-            Console.WriteLine("Старт сеанса ");
-            Console.WriteLine();
+            Console.WriteLine("Старт сеанса \r\n");
             var api = new VkApi();
             api.Authorize(new ApiAuthParams() { AccessToken = KeysRepos.MyAppToken });
-            Console.WriteLine("Авторизовался");
-            Console.WriteLine();
+            Console.WriteLine("Авторизовался\r\n");
 
             while (true)
             {
@@ -35,8 +32,7 @@ namespace VKApi
                     if (a.Type == GroupUpdateType.MessageNew)
                     {
                         var currentString = a.Message.Body;
-                        Console.WriteLine(currentString);
-                        Console.WriteLine();
+                        Console.WriteLine(currentString + "\r\n");
                         var strOut = WeatherAP.GetWeather(currentString);
                         var idUser = a.Message.UserId;
                         var randomNum = new Random();
