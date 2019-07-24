@@ -24,7 +24,8 @@ namespace VKApi
 				HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 				using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
 					response = streamReader.ReadToEnd();
-				Console.WriteLine("Подключился к серверу погоды\r\n");
+				//Console.WriteLine("Подключился к серверу погоды\r\n");
+				Program.Logger.WriteMessage("Подключился к серверу погоды\r\n", "svc");
 				var jDictionary = DeserializeToDict(response);
 				result = ConvertCityWeather(city, jDictionary);
 			}
@@ -33,7 +34,8 @@ namespace VKApi
 				result = "Неверный формат строки";
 			}
 
-			Console.WriteLine(result + "\r\n");
+			Program.Logger.WriteMessage(result, "svc");
+			//Console.WriteLine(result + "\r\n");
 
             return result;
         }

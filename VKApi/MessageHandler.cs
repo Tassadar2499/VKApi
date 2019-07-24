@@ -13,12 +13,13 @@ namespace VKApi
 {
 	public static class MessageHandler
 	{
-		public static void HandleMessage( GroupUpdate a, VkApi api)
+		public static void HandleMessage(GroupUpdate a, VkApi api)
 		{
 			if (a.Type == GroupUpdateType.MessageNew)
 			{
 				var currentString = a.Message.Body;
-				Console.WriteLine(currentString + "\r\n");
+				//Console.WriteLine(currentString + "\r\n");
+				Program.Logger.WriteMessage(currentString, "svc");
 
 				var strOut = WeatherAP.GetWeather(currentString);
 				var idUser = a.Message.UserId;
@@ -37,6 +38,8 @@ namespace VKApi
 					Message = "Введите название города"
 				});
 			}
+
+			
 		}
 	}
 }
