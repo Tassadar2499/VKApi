@@ -9,11 +9,11 @@ namespace VKApi
 {
     public static class DictEngRus
     {
-        private static Dictionary<string, string> _dictionary;
+        public static readonly Dictionary<string, string> Dictionary;
 
 		static DictEngRus()
 		{
-			_dictionary = FillTheDictionary("eng_words.txt");
+			Dictionary = FillTheDictionary("eng_words.txt");
 		}
 
         public static Dictionary<string, string> FillTheDictionary(string file)
@@ -33,7 +33,7 @@ namespace VKApi
         {
             try
             {
-                return _dictionary[strKey];
+                return Dictionary[strKey];
             }
             catch
             {

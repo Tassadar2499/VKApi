@@ -24,3 +24,4 @@ D:\VSProjects\VKChatBot\VKApi\obj\Debug\VKApi.csproj.CoreCompileInputs.cache
 D:\VSProjects\VKChatBot\VKApi\obj\Debug\VKApi.csproj.CopyComplete
 D:\VSProjects\VKChatBot\VKApi\obj\Debug\VKApi.exe
 D:\VSProjects\VKChatBot\VKApi\obj\Debug\VKApi.pdb
+D:\VSProjects\VKChatBot\VKApi\obj\Debug\VKApi.csprojAssemblyReference.cache

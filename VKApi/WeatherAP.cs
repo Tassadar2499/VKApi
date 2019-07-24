@@ -14,26 +14,26 @@ namespace VKApi
     {
         public static string GetWeather(string city)
         {
-            var result = "";
-            if (city == "старт") return "Погнали";
+			if (city == "старт") return "Погнали";
 			string weburl = KeysRepos.OpenWeatherURL + city + KeysRepos.OpenWeatherKey;
-            try
-            {
-                var response = "";
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(weburl);
-                HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
-                    response = streamReader.ReadToEnd();
-                Console.WriteLine("Подключился к серверу погоды\r\n");
-                var jDictionary = DeserializeToDict(response);
-                result = ConvertCityWeather(city, jDictionary);
-            }
-            catch
-            {
-                result = "Неверный формат строки";
-            }
+			string result;
+			try
+			{
+				var response = "";
+				HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(weburl);
+				HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+				using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+					response = streamReader.ReadToEnd();
+				Console.WriteLine("Подключился к серверу погоды\r\n");
+				var jDictionary = DeserializeToDict(response);
+				result = ConvertCityWeather(city, jDictionary);
+			}
+			catch
+			{
+				result = "Неверный формат строки";
+			}
 
-            Console.WriteLine(result + "\r\n");
+			Console.WriteLine(result + "\r\n");
 
             return result;
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using VkNet;
 using VkNet.Enums.SafetyEnums;
@@ -12,7 +13,8 @@ namespace VKApi
 {
     class Program
     {
-        static void Main(string[] args)
+		public static LinkedList<Thread> workers = new LinkedList<Thread>();
+        static void Main()
         {
             Console.WriteLine("Старт сеанса \r\n");
             var api = new VkApi();
@@ -29,28 +31,9 @@ namespace VKApi
 
                 foreach (var a in poll.Updates)
                 {
-                    if (a.Type == GroupUpdateType.MessageNew)
-                    {
-                        var currentString = a.Message.Body;
-                        Console.WriteLine(currentString + "\r\n");
-                        var strOut = WeatherAP.GetWeather(currentString);
-                        var idUser = a.Message.UserId;
-                        var randomNum = new Random();
-                        api.Messages.Send(new MessagesSendParams()
-                        {
-                            RandomId = randomNum.Next(0, int.MaxValue),
-                            UserId = idUser,
-                            Message = strOut
-                        });
-
-                        api.Messages.Send(new MessagesSendParams()
-                        {
-                            RandomId = randomNum.Next(1, int.MaxValue) - 1,
-                            UserId = idUser,
-                            Message = "Введите название города"
-                        });
-                    }
-                }
+					workers.AddLast(new Thread(() => MessageHandler.HandleMessage(a, api)));
+					workers.Last.Value.Start();
+				}
             }
         }
     }
