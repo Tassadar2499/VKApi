@@ -32,7 +32,7 @@ namespace VKApi
 
 				api.Messages.Send(new MessagesSendParams()
 				{
-					RandomId = randomNum.Next(1, int.MaxValue) - 1,
+					RandomId = randomNum.Next(0, int.MaxValue) >> 1, // короче эта хрень нужна чтобы randomId с верхним не повторялся
 					UserId = idUser,
 					Message = "Введите название города"
 				});
